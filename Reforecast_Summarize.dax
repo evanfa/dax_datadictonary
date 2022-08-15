@@ -1,0 +1,93 @@
+﻿EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        PBIpull,
+        PBIpull[Type],
+        PBIpull[Year Month Code],
+        PBIpull[Year],
+        PBIpull[Month],
+        PBIpull[Area],
+        PBIpull[Sub-Area],
+        "Totals", SUM ( PBIpull[Count] )
+    ),
+    FILTER (
+        PBIpull,
+        AND ( PBIpull[Type] = "08&04 Reforecast", PBIpull[Year Month Code] <= 202206 )
+    ),
+    FILTER ( PBIpull, PBIpull[Count] > 0 )
+)
+
+EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        PBIpull,
+        PBIpull[Type],
+        PBIpull[Year Month Code],
+        PBIpull[Year],
+        PBIpull[Month],
+        PBIpull[Area],
+        PBIpull[Sub-Area],
+        "Totals", SUM ( PBIpull[Count] )
+    ),
+    FILTER (
+        PBIpull,
+        AND ( PBIpull[Type] = "Actuals", PBIpull[Year Month Code] >= 202207 )
+    ),
+    FILTER ( PBIpull, PBIpull[Count] > 0 )
+)
+
+//EVALUATE
+//CALCULATETABLE (
+//    SUMMARIZE (
+//        PBIpull,
+//        PBIpull[Type],
+//        PBIpull[Year Month Code],
+//        PBIpull[Year],
+//        PBIpull[Month],
+//        PBIpull[Area],
+//        PBIpull[Sub-Area],
+//        "Totals", SUM ( PBIpull[Count] )
+//    ),
+//    FILTER (
+//        PBIpull,
+//        AND ( PBIpull[Type] = "08&04 Reforecast", PBIpull[Year Month Code] >= 202207 )
+//    ),
+//    FILTER ( PBIpull, PBIpull[Count] > 0 )
+//)
+
+
+//DEFINE
+//    MEASURE PBIpull[TotalLessActs] =
+//        CALCULATE (
+//            SUM ( PBIpull[Count] ),
+//            FILTER (
+//                PBIpull,
+//                AND ( PBIpull[Type] = "08&04 Reforecast", PBIpull[Year Month Code] <= 202206 )
+//            )
+//        )
+//
+//EVALUATE
+//{ [TotalLessActs] }
+//
+//
+//DEFINE
+//    MEASURE PBIpull[TotalActs] =
+//        CALCULATE (
+//            SUM ( PBIpull[Count] ),
+//            FILTER (
+//                PBIpull,
+//                AND ( PBIpull[Type] = "Actuals", PBIpull[Year Month Code] <= 202206 )
+//            )
+//        )
+//
+//EVALUATE
+//{ [TotalActs] }
+//    FILTERS ( PBIpull[Month] ),
+//    PBIpull[Month]
+//        IN {
+//        "Jan",
+//        "Fen"
+//    } 
+//,
+//FILTER ( PBIpull, AND(PBIpull[Area] = "A", PBIpull[Type]="08&04 Reforecast" ))
+//FILTER ( PBIpull, PBIpull[Type]="08&04 Reforecast" )

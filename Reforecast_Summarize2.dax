@@ -1,0 +1,165 @@
+﻿DEFINE
+    MEASURE PBIpull[calrefor] =
+        CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "08&04 Reforecast" )
+    -- 22494
+    MEASURE PBIpull[rfmix] =
+        MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+            && MIN ( 'PBIpull'[Year Month Code] ) <= 202206
+    MEASURE PBIpull[calreless] =
+        CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "Actuals" )
+    MEASURE PBIpull[sumresult] =
+        SUM ( 'PBIpull'[Count] )
+    MEASURE PBIpull[Original] =
+        SWITCH (
+            TRUE (),
+            MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+                && MIN ( 'PBIpull'[Year Month Code] ) <= 202206, CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "Actuals" ),
+            CALCULATE ( SUM ( 'PBIpull'[Count] ) )
+        )
+    MEASURE PBIpull[MeasureX] =
+        SWITCH (
+            TRUE (),
+            MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+                && MIN ( 'PBIpull'[Year Month Code] ) >= 202207, CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "08&04 Reforecast" ),
+            MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+                && MIN ( 'PBIpull'[Year Month Code] ) <= 202206, CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "Actuals" ),
+            CALCULATE ( SUM ( 'PBIpull'[Count] ) )
+        )
+    -- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::    
+    -- CORRECT 
+MEASURE PBIpull[Correct] =
+        SWITCH (
+            TRUE (),
+            MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+                && MIN MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+                && MIN ( 'PBIpull'[Year Month Code] ) >= 202207,( 'PBIpull'[Year Month Code] ) >= 202207, CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "08&04 Reforecast" ),
+            MAX ( 'PBIpull'[Type] ) = "Actuals"
+                && MIN ( 'PBIpull'[Year Month Code] ) <= 202206, CALCULATE ( SUM ( 'PBIpull'[Count] ), 'PBIpull'[Type] = "Actuals" ),
+            CALCULATE ( SUM ( 'PBIpull'[Count] ) )
+        )
+    -- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    MEASURE PBIpull[rfmax] =
+        MAX ( 'PBIpull'[Type] ) = "08&04 Reforecast"
+            && MIN ( 'PBIpull'[Year Month Code] ) >= 202207
+    -- FALSE        
+    MEASURE PBIpull[maxVal] =
+        CALCULATE ( MAX ( 'PBIpull'[Type] ) )
+    MEASURE PBIpull[minVal] =
+        CALCULATE ( MIN ( 'PBIpull'[Year Month Code] ) )
+
+EVALUATE
+{ CONCATENATE ( "Original: ", [Original] ) }
+
+EVALUATE
+{ CONCATENATE ( "Complex: ", [MeasureX] ) }
+
+EVALUATE
+{ CONCATENATE ( "CORRECT: ", [Correct] ) }
+
+EVALUATE
+{ CONCATENATE ( "VALOR COMPROBACIÓN: ", [rfmax] ) }
+
+EVALUATE
+{ CONCATENATE ( "MAX VAL: ", [maxVal] ) }
+//Plan
+
+EVALUATE
+{ CONCATENATE ( "MIN VAL: ", [minVal] ) }
+//202101
+
+EVALUATE
+{ CONCATENATE ( "2 RForecast-2022-07: ", [calrefor] ) }
+
+EVALUATE
+{ CONCATENATE ( "3 RForecast-2022-06: ", [rfmix] ) }
+
+EVALUATE
+{ CONCATENATE ( "4 Actuals - Sum: ", [calreless] ) }
+
+EVALUATE
+{ CONCATENATE ( "5 Sum: ", [sumresult] ) }
+//
+//DEFINE
+//    MEASURE PBIpull[TotalPlus] =
+//        CALCULATE (
+//            SUM ( PBIpull[Count] ),
+//            FILTER (
+//                PBIpull,
+//                AND ( PBIpull[Type] = "08&04 Reforecast", PBIpull[Year Month Code] < 202206 )
+//            ),
+//            FILTER ( PBIpull,  PBIpull[Count] > 0  )
+//        )
+//
+//EVALUATE
+//{ [TotalPlus] }
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//EVALUATE
+//CALCULATETABLE (
+//    PBIpull,
+//    FILTER (
+//        PBIpull,
+//        AND ( PBIpull[Type] = "Actuals", PBIpull[Year Month Code] >= 202206 )
+//    ),
+//    FILTER ( PBIpull, AND ( PBIpull[Count] > 0, PBIpull[Sub-Area] = "A1" ) )
+//)
+//EVALUATE
+//CALCULATETABLE (
+//    PBIpull,
+//    FILTER (
+//        PBIpull,
+//        AND ( PBIpull[Type] = "08&04 Reforecast", PBIpull[Year Month Code] < 202206 )
+//    ),
+//    FILTER ( PBIpull, AND ( PBIpull[Count] > 0, PBIpull[Sub-Area] = "A1" ) )
+//)
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//DEFINE
+//    MEASURE PBIpull[TotalPlus] =
+//        CALCULATE (
+//            SUM ( PBIpull[Count] ),
+//            FILTER (
+//                PBIpull,
+//                AND ( PBIpull[Type] = "Actuals", PBIpull[Year Month Code] > 202206 )
+//            ),
+//            FILTER ( PBIpull,  PBIpull[Count] > 0  )
+//        )
+//
+//EVALUATE
+//{ [TotalPlus] }
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//EVALUATE
+//CALCULATETABLE (
+//    SUMMARIZE (
+//        PBIpull,
+//        PBIpull[Type],
+//        PBIpull[Year Month Code],
+//        PBIpull[Year],
+//        PBIpull[Sub-Area],
+//        "Totals", SUM ( PBIpull[Count] )
+//    ),
+//    FILTER (
+//        PBIpull,
+//        AND ( PBIpull[Type] = "Actuals", PBIpull[Year Month Code] >= 202206 )
+//    ),
+//    FILTER ( PBIpull, AND ( PBIpull[Count] > 0, PBIpull[Sub-Area] = "A1" ) )
+//)
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//EVALUATE
+//CALCULATETABLE (
+//    SUMMARIZE (
+//        PBIpull,
+//        PBIpull[Type],
+//        PBIpull[Year Month Code],
+//        PBIpull[Year],
+//        PBIpull[Sub-Area],
+//        "Totals", SUM ( PBIpull[Count] )
+//    ),
+//    FILTER (
+//        PBIpull,
+//        AND ( PBIpull[Type] = "08&04 Reforecast", PBIpull[Year Month Code] < 202206 )
+//    ),
+//    FILTER ( PBIpull, AND ( PBIpull[Count] > 0, PBIpull[Sub-Area] = "A1" ) )
+//)
