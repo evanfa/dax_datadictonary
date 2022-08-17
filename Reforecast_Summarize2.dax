@@ -163,3 +163,98 @@ EVALUATE
 //    ),
 //    FILTER ( PBIpull, AND ( PBIpull[Count] > 0, PBIpull[Sub-Area] = "A1" ) )
 //)
+
+-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- Tabla: De un crimen dado muestra la suma total por año
+-- Suma Valores por columna, filtra por crimen y muestra en tabla de año y variable encontrada
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//DEFINE
+//    MEASURE TempCasesComparison[Crimes Found] =
+//        CALCULATE (
+//            SUM ( TempCasesComparison[ENE] ) + SUM ( TempCasesComparison[FEB] )
+//                + SUM ( TempCasesComparison[MAR] )
+//                + SUM ( TempCasesComparison[ABR] )
+//                + SUM ( TempCasesComparison[MAY] )
+//                + SUM ( TempCasesComparison[JUN] )
+//                + SUM ( TempCasesComparison[JUL] )
+//                + SUM ( TempCasesComparison[AGO] )
+//                + SUM ( TempCasesComparison[SEP] )
+//                + SUM ( TempCasesComparison[OCT] )
+//                + SUM ( TempCasesComparison[NOV] )
+//                + SUM ( TempCasesComparison[DIC] ),
+//            FILTER ( TempCasesComparison, TempCasesComparison[Crimen] = @Crimen )
+//        )
+//EVALUATE
+//ADDCOLUMNS (
+//    VALUES ( 'TempCasesComparison'[ANO] ),
+//    "Crimenes Totales", [Crimes Found]
+//)
+//
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- Tabla: Total de Eventos por Año
+-- Suma Valores por columna, filtra por crimen y muestra en tabla de año y variable encontrada
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//DEFINE
+//MEASURE
+//TempCasesComparison[Result] =
+//(
+//    SUM ( TempCasesComparison[ENE] ) + SUM ( TempCasesComparison[FEB] )
+//        + SUM ( TempCasesComparison[MAR] )
+//        + SUM ( TempCasesComparison[ABR] )
+//        + SUM ( TempCasesComparison[MAY] )
+//        + SUM ( TempCasesComparison[JUN] )
+//        + SUM ( TempCasesComparison[JUL] )
+//        + SUM ( TempCasesComparison[AGO] )
+//        + SUM ( TempCasesComparison[SEP] )
+//        + SUM ( TempCasesComparison[OCT] )
+//        + SUM ( TempCasesComparison[NOV] )
+//        + SUM ( TempCasesComparison[DIC] )
+//)
+//
+//EVALUATE
+//ADDCOLUMNS ( VALUES ( 'TempCasesComparison'[ANO] ), "My Var:", [Result] )
+
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- Tabla: Todos los crimenes presentados en el 2022
+-- Calcula una tabla con los valores de crimenes y una condición
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//EVALUATE
+//CALCULATETABLE (
+//    VALUES ( 'TempCasesComparison'[Crimen] ),
+//    'TempCasesComparison'[ANO] = "2022"
+//)
+
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+-- Simple Measure Manipulation
+-- Create measure, sumarize events and filter by two parameters
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --
+//DEFINE
+//    MEASURE TempCasesComparison[MeasureOne] =
+//        CALCULATE (
+//            (
+//                SUM ( TempCasesComparison[ENE] ) + SUM ( TempCasesComparison[FEB] )
+//                    + SUM ( TempCasesComparison[MAR] )
+//                    + SUM ( TempCasesComparison[ABR] )
+//                    + SUM ( TempCasesComparison[MAY] )
+//                    + SUM ( TempCasesComparison[JUN] )
+//                    + SUM ( TempCasesComparison[JUL] )
+//                    + SUM ( TempCasesComparison[AGO] )
+//                    + SUM ( TempCasesComparison[SEP] )
+//                    + SUM ( TempCasesComparison[OCT] )
+//                    + SUM ( TempCasesComparison[NOV] )
+//                    + SUM ( TempCasesComparison[DIC] )
+//            ),
+//            FILTERS ( TempCasesComparison[Crimen] ),
+//            TempCasesComparison[Crimen] IN { "Extorsión", "Secuestro" }
+//        )
+//
+//EVALUATE
+//{ [MeasureOne] }
