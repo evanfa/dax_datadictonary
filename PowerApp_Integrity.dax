@@ -1,0 +1,45 @@
+﻿EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+    Tbl_Cruces,
+    Tbl_Cruces[Id],
+    Tbl_Cruces[Tipo_Cruce],
+    Tbl_Cruces[Sistema],
+    Tbl_Cruces[Región],
+    Tbl_Cruces[Estatus]
+    )
+)
+
+
+EVALUATE
+CALCULATETABLE(
+SUMMARIZE(
+	Tbl_Cruces,
+	Tbl_Cruces[Id],
+    Tbl_Cruces[Fecha_Registro],
+    Tbl_Cruces[Fecha_Detenido],
+    Tbl_Cruces[Fecha_Recopilación_Informa],
+    Tbl_Cruces[Fecha_Revisión_Listado_Tec],
+    Tbl_Cruces[Fecha_RptIntegridad],
+    Tbl_Cruces[Fecha_Generación_Acuerdo_C],
+    Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],
+    Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],
+    Tbl_Cruces[Fecha_Proyecto_Ejecución],
+    Tbl_Cruces[Fecha_Proyecto_Cerrado]
+	)
+)
+
+
+EVALUATE
+ADDCOLUMNS (
+    Tbl_Cruces,
+    	"Dias: Detenido", DATEDIFF(Tbl_Cruces[Fecha_Detenido],FORMAT(NOW(),"MM/DD/YYYY"),DAY),
+        "Dias: Registro-Recopila", DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Recopilación_Informa],DAY),
+        "Dias: Recopila-RevLTecn", DATEDIFF(Tbl_Cruces[Fecha_Recopilación_Informa],Tbl_Cruces[Fecha_Revisión_Listado_Tec],DAY),
+        "Dias: RevLTecn-GAcuerdo", DATEDIFF(Tbl_Cruces[Fecha_Revisión_Listado_Tec],Tbl_Cruces[Fecha_Generación_Acuerdo_C],DAY),
+        "Dias: GAcuerdo-AcuerdoT", DATEDIFF(Tbl_Cruces[Fecha_Generación_Acuerdo_C],Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],DAY),
+        "Dias: AcuerdoT-CFirmado", DATEDIFF(Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],DAY),
+        "Dias: CFirmado-Ejecucion", DATEDIFF(Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],Tbl_Cruces[Fecha_Proyecto_Ejecución],DAY)
+)
+
+
