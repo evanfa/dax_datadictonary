@@ -31,6 +31,14 @@ SUMMARIZE(
 
 
 EVALUATE
+CALCULATETABLE(
+SUMMARIZE(
+	Tbl_Cruces,
+	Tbl_Cruces[Id])
+	)
+	
+
+EVALUATE
 ADDCOLUMNS (
     Tbl_Cruces,
     	"Dias: Detenido", DATEDIFF(Tbl_Cruces[Fecha_Detenido],FORMAT(NOW(),"MM/DD/YYYY"),DAY),
