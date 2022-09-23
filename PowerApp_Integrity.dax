@@ -99,50 +99,38 @@ ADDCOLUMNS (
         )
 )
 
-EVALUATE
-CALCULATETABLE (
-    SUMMARIZE (
-        Tbl_Cruces,
-        Tbl_Cruces[Id],
-        Tbl_Cruces[Tipo_Cruce],
-        Tbl_Cruces[Región]
-    )
-)
+
+-- ***********************************************************************************
 
 EVALUATE
 ADDCOLUMNS (
-    VALUES ( Tbl_Cruces[Región] ),
-    "Permisos Mayores",
-        CALCULATE (
-            COUNTROWS ( 'Tbl_Cruces' ),
-            FILTER (
-                ALL ( 'Tbl_Cruces' ),
-                'Tbl_Cruces'[Región] = "Centro"
-            )
-        ),
-    "Permisos Menores",
-        CALCULATE (
-            COUNTROWS ( 'Tbl_Cruces' ),
-            FILTER (
-                ALL ( 'Tbl_Cruces' ),
-                'Tbl_Cruces'[Región] = "ESTE"
-            )
-        ),
-    "Maquinaria Pesada",
-        CALCULATE (
-            COUNTROWS ( 'Tbl_Cruces' ),
-            FILTER (
-                ALL ( 'Tbl_Cruces' ),
-                'Tbl_Cruces'[Región] = "NORTE"
-            )
-        )
+    Tbl_Cruces,
+    "%: Detenido", 
+    DATEDIFF ( Tbl_Cruces[Fecha_Detenido], FORMAT ( NOW (), "MM/DD/YYYY" ), DAY )/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY),
+    "%: Registro", 
+    DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Recopilación_Informa],DAY)/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY),
+    "%: Recopilación", 
+     DATEDIFF(Tbl_Cruces[Fecha_Recopilación_Informa],Tbl_Cruces[Fecha_Revisión_Listado_Tec],DAY)/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY),
+     "%: Rev L Técnico",
+     DATEDIFF(Tbl_Cruces[Fecha_Revisión_Listado_Tec],Tbl_Cruces[Fecha_Generación_Acuerdo_C],DAY)/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY),
+     "%: G Acuerdo",
+     DATEDIFF(Tbl_Cruces[Fecha_Generación_Acuerdo_C],Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],DAY)/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY),
+     "%: Acuerdo Terceros",
+     DATEDIFF(Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],DAY)/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY),
+     "%: Acuerdo Firmado",
+     DATEDIFF(Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],Tbl_Cruces[Fecha_Proyecto_Ejecución],DAY)/DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Proyecto_Cerrado],DAY)
 )
 
-EVALUATE
-{ [Mayores&Centro] }
+-- ***********************************************************************************
 
-EVALUATE
-{ [Menor&Centro] }
 
-EVALUATE
-{ [Maquinaria&Centro] }
+
+
+//EVALUATE
+//{ [Mayores&Centro] }
+//
+//EVALUATE
+//{ [Menor&Centro] }
+//
+//EVALUATE
+//{ [Maquinaria&Centro] }
