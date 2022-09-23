@@ -1,53 +1,148 @@
-﻿EVALUATE
+﻿DEFINE
+    MEASURE Tbl_Cruces[Mayores&Centro] =
+        CALCULATE (
+            COUNTROWS ( 'Tbl_Cruces' ),
+            FILTER (
+                ALL ( 'Tbl_Cruces' ),
+                'Tbl_Cruces'[Tipo_Cruce] = "Mayor"
+                    && 'Tbl_Cruces'[Región] = "Centro"
+            )
+        )
+    MEASURE Tbl_Cruces[Menor&Centro] =
+        CALCULATE (
+            COUNTROWS ( 'Tbl_Cruces' ),
+            FILTER (
+                ALL ( 'Tbl_Cruces' ),
+                'Tbl_Cruces'[Tipo_Cruce] = "Menor"
+                    && 'Tbl_Cruces'[Región] = "Centro"
+            )
+        )
+    MEASURE Tbl_Cruces[Maquinaria&Centro] =
+        CALCULATE (
+            COUNTROWS ( 'Tbl_Cruces' ),
+            FILTER (
+                ALL ( 'Tbl_Cruces' ),
+                'Tbl_Cruces'[Tipo_Cruce] = "Maquinaria Pesada"
+                    && 'Tbl_Cruces'[Región] = "Centro"
+            )
+        )
+
+EVALUATE
 CALCULATETABLE (
     SUMMARIZE (
-    Tbl_Cruces,
-    Tbl_Cruces[Id],
-    Tbl_Cruces[Tipo_Cruce],
-    Tbl_Cruces[Sistema],
-    Tbl_Cruces[Región],
-    Tbl_Cruces[Estatus]
+        Tbl_Cruces,
+        Tbl_Cruces[Id],
+        Tbl_Cruces[Tipo_Cruce],
+        Tbl_Cruces[Sistema],
+        Tbl_Cruces[Región],
+        Tbl_Cruces[Estatus]
     )
 )
 
-
 EVALUATE
-CALCULATETABLE(
-SUMMARIZE(
-	Tbl_Cruces,
-	Tbl_Cruces[Id],
-    Tbl_Cruces[Fecha_Registro],
-    Tbl_Cruces[Fecha_Detenido],
-    Tbl_Cruces[Fecha_Recopilación_Informa],
-    Tbl_Cruces[Fecha_Revisión_Listado_Tec],
-    Tbl_Cruces[Fecha_RptIntegridad],
-    Tbl_Cruces[Fecha_Generación_Acuerdo_C],
-    Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],
-    Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],
-    Tbl_Cruces[Fecha_Proyecto_Ejecución],
-    Tbl_Cruces[Fecha_Proyecto_Cerrado]
-	)
+CALCULATETABLE (
+    SUMMARIZE (
+        Tbl_Cruces,
+        Tbl_Cruces[Id],
+        Tbl_Cruces[Fecha_Registro],
+        Tbl_Cruces[Fecha_Detenido],
+        Tbl_Cruces[Fecha_Recopilación_Informa],
+        Tbl_Cruces[Fecha_Revisión_Listado_Tec],
+        Tbl_Cruces[Fecha_RptIntegridad],
+        Tbl_Cruces[Fecha_Generación_Acuerdo_C],
+        Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],
+        Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],
+        Tbl_Cruces[Fecha_Proyecto_Ejecución],
+        Tbl_Cruces[Fecha_Proyecto_Cerrado]
+    )
 )
-
-
-EVALUATE
-CALCULATETABLE(
-SUMMARIZE(
-	Tbl_Cruces,
-	Tbl_Cruces[Id])
-	)
-	
 
 EVALUATE
 ADDCOLUMNS (
     Tbl_Cruces,
-    	"Dias: Detenido", DATEDIFF(Tbl_Cruces[Fecha_Detenido],FORMAT(NOW(),"MM/DD/YYYY"),DAY),
-        "Dias: Registro-Recopila", DATEDIFF(Tbl_Cruces[Fecha_Registro],Tbl_Cruces[Fecha_Recopilación_Informa],DAY),
-        "Dias: Recopila-RevLTecn", DATEDIFF(Tbl_Cruces[Fecha_Recopilación_Informa],Tbl_Cruces[Fecha_Revisión_Listado_Tec],DAY),
-        "Dias: RevLTecn-GAcuerdo", DATEDIFF(Tbl_Cruces[Fecha_Revisión_Listado_Tec],Tbl_Cruces[Fecha_Generación_Acuerdo_C],DAY),
-        "Dias: GAcuerdo-AcuerdoT", DATEDIFF(Tbl_Cruces[Fecha_Generación_Acuerdo_C],Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],DAY),
-        "Dias: AcuerdoT-CFirmado", DATEDIFF(Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],DAY),
-        "Dias: CFirmado-Ejecucion", DATEDIFF(Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],Tbl_Cruces[Fecha_Proyecto_Ejecución],DAY)
+    "Dias: Detenido", DATEDIFF ( Tbl_Cruces[Fecha_Detenido], FORMAT ( NOW (), "MM/DD/YYYY" ), DAY ),
+    "Dias: Registro-Recopila",
+        DATEDIFF (
+            Tbl_Cruces[Fecha_Registro],
+            Tbl_Cruces[Fecha_Recopilación_Informa],
+            DAY
+        ),
+    "Dias: Recopila-RevLTecn",
+        DATEDIFF (
+            Tbl_Cruces[Fecha_Recopilación_Informa],
+            Tbl_Cruces[Fecha_Revisión_Listado_Tec],
+            DAY
+        ),
+    "Dias: RevLTecn-GAcuerdo",
+        DATEDIFF (
+            Tbl_Cruces[Fecha_Revisión_Listado_Tec],
+            Tbl_Cruces[Fecha_Generación_Acuerdo_C],
+            DAY
+        ),
+    "Dias: GAcuerdo-AcuerdoT",
+        DATEDIFF (
+            Tbl_Cruces[Fecha_Generación_Acuerdo_C],
+            Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],
+            DAY
+        ),
+    "Dias: AcuerdoT-CFirmado",
+        DATEDIFF (
+            Tbl_Cruces[Fecha_Revisión_Acuerdo_Cru],
+            Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],
+            DAY
+        ),
+    "Dias: CFirmado-Ejecucion",
+        DATEDIFF (
+            Tbl_Cruces[Fecha_Acuerdo_Cruce_Firmado],
+            Tbl_Cruces[Fecha_Proyecto_Ejecución],
+            DAY
+        )
 )
 
+EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        Tbl_Cruces,
+        Tbl_Cruces[Id],
+        Tbl_Cruces[Tipo_Cruce],
+        Tbl_Cruces[Región]
+    )
+)
 
+EVALUATE
+ADDCOLUMNS (
+    VALUES ( Tbl_Cruces[Región] ),
+    "Permisos Mayores",
+        CALCULATE (
+            COUNTROWS ( 'Tbl_Cruces' ),
+            FILTER (
+                ALL ( 'Tbl_Cruces' ),
+                'Tbl_Cruces'[Región] = "Centro"
+            )
+        ),
+    "Permisos Menores",
+        CALCULATE (
+            COUNTROWS ( 'Tbl_Cruces' ),
+            FILTER (
+                ALL ( 'Tbl_Cruces' ),
+                'Tbl_Cruces'[Región] = "ESTE"
+            )
+        ),
+    "Maquinaria Pesada",
+        CALCULATE (
+            COUNTROWS ( 'Tbl_Cruces' ),
+            FILTER (
+                ALL ( 'Tbl_Cruces' ),
+                'Tbl_Cruces'[Región] = "NORTE"
+            )
+        )
+)
+
+EVALUATE
+{ [Mayores&Centro] }
+
+EVALUATE
+{ [Menor&Centro] }
+
+EVALUATE
+{ [Maquinaria&Centro] }
