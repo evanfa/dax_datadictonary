@@ -1,0 +1,18 @@
+﻿EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        estatus_tramite_db,
+        estatus_tramite_db[IdMatriz],
+        estatus_tramite_db[FechaIngreso],
+        pda_db[FechaEntregaExp],
+        "OnTime", VALUE ( pda_db[FechaEntregaExp] - estatus_tramite_db[FechaIngreso] )
+    ),
+    FILTER (
+        estatus_tramite_db,
+        AND (
+            estatus_tramite_db[FechaIngreso] > 0,
+            estatus_tramite_db[Estatus] = "SUBMITED"
+        )
+    ),
+    FILTER ( pda_db, pda_db[FechaEntregaExp] > 0 )
+)
