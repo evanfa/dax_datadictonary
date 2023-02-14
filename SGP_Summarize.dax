@@ -16,3 +16,29 @@ CALCULATETABLE (
     ),
     FILTER ( pda_db, pda_db[FechaEntregaExp] > 0 )
 )
+
+EVALUATE
+SUMMARIZECOLUMNS (
+    pda_db[idPDA],
+    TREATAS ( { "40" }, pda_db[IdItem] ),
+    "Value", SUMX ( pda_db, pda_db[idPDA] )
+)
+// Generated DAX Query
+
+EVALUATE
+TOPN ( 500, pda_db )
+/*EVALUATE
+SUMMARIZE ( pda_db, pda_db[IdMatriz], pda_db[idPDA] )
+
+EVALUATE
+SUMX(pda_db,pda_db[idPDA])
+*/
+
+EVALUATE
+CALCULATE (
+    { "Totals" },
+    FILTER (
+        ALLSELECTED ( ontime_db ),
+        ontime_db[FechaEntregaExp] <= MAX ( ontime_db[FechaIngreso] )
+    )
+)

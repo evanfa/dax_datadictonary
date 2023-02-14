@@ -1,0 +1,57 @@
+﻿EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        estatus_tramite_db,
+        estatus_tramite_db[IdMatriz],
+        estatus_tramite_db[FechaIngreso],
+        pda_db[FechaEntregaExp],
+        "OnTime", VALUE ( pda_db[FechaEntregaExp] - estatus_tramite_db[FechaIngreso] )
+    ),
+    FILTER (
+        estatus_tramite_db,
+            estatus_tramite_db[Estatus] = "Info Gathering"
+    ),
+    FILTER ( pda_db, pda_db[FechaEntregaExp] > 0 )
+)
+
+EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        estatus_tramite_db,
+        estatus_tramite_db[IdMatriz],
+        pda_db[FechaEntregaExp],
+        "OutTimeInfoGath", VALUE ( TODAY() - pda_db[FechaEntregaExp] )
+    ),
+    FILTER (
+        estatus_tramite_db,
+            estatus_tramite_db[Estatus] = "Info Gathering"
+    ),
+    FILTER ( pda_db, pda_db[idPDA] > 0 )
+)
+
+EVALUATE
+TOPN ( 300, estatus_tramite_db )
+
+EVALUATE
+CALCULATETABLE (
+    SUMMARIZE (
+        estatus_tramite_db,
+        estatus_tramite_db[IdMatriz],
+        pda_db[FechaMaxObtencion],
+        estatus_tramite_db[FechaNotificacion],
+        "TimeObtaniedVs", VALUE ( pda_db[FechaMaxObtencion] - estatus_tramite_db[FechaNotificacion] )
+    ),
+    FILTER (
+        estatus_tramite_db,
+            estatus_tramite_db[Estatus] = "Obtained"
+    ),
+    FILTER ( pda_db, pda_db[idPDA] > 0 )
+)
+
+
+EVALUATE
+TOPN ( 300, pda_db )
+
+// Generated DAX Query
+EVALUATE 
+TOPN( 500, estatus_tramite_db )
